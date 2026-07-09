@@ -1,22 +1,20 @@
-"""
-orchestrator.py — the "manager" agent in the Orchestrator/Manager multi-agent
-pattern. It doesn't do any diagnostic reasoning itself — it just sequences
-the three specialists and passes state (Incident -> Diagnosis -> IncidentReport)
-between them, exactly like the sequential pipeline pattern in the prep guide.
-
-Guardrail: the final report is only ever printed/logged for human review.
-Nothing here files a real ticket or sends a real notification automatically.
-"""
-
-from anthropic import Anthropic
+from openai import OpenAI
+import os
 import monitor_agent
 import diagnostic_agent
 import reporting_agent
 from audit_log import log_event
 
 
-def run_netops_pipeline(client: Anthropic = None):
-    client = client or Anthropic()
+def _make_client():
+    return OpenAI(
+        api_key=os.environ.get("GROQ_API_KEY"),
+        base_url="https://api.groq.com/openai/v1",
+    )
+
+
+def run_netops_pipeline(client=None):
+    client = client or _make_client()
     incidents = monitor_agent.scan_for_incidents()
 
     if not incidents:
@@ -42,5 +40,5 @@ def run_netops_pipeline(client: Anthropic = None):
 if __name__ == "__main__":
     import simulated_device as device
     device.reset()
-    device.inject_random_fault()  # simulate something going wrong, for the demo
+    device.inject_random_fault()
     run_netops_pipeline()
