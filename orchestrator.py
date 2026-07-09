@@ -8,23 +8,15 @@ Guardrail: the final report is only ever printed/logged for human review.
 Nothing here files a real ticket or sends a real notification automatically.
 """
 
-from openai import OpenAI
-import os
+from anthropic import Anthropic
 import monitor_agent
 import diagnostic_agent
 import reporting_agent
 from audit_log import log_event
 
 
-def _make_client():
-    return OpenAI(
-        api_key=os.environ.get("XAI_API_KEY"),
-        base_url="https://api.x.ai/v1",
-    )
-
-
-def run_netops_pipeline(client=None):
-    client = client or _make_client()
+def run_netops_pipeline(client: Anthropic = None):
+    client = client or Anthropic()
     incidents = monitor_agent.scan_for_incidents()
 
     if not incidents:
