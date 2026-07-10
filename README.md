@@ -62,11 +62,4 @@ python test_dry_run.py
 python orchestrator.py
 ```
 
-## Resume bullet
-> **NetOps Crew — Multi-Agent Network Incident Response Orchestrator** — Agentic AI | Multi-Agent Orchestration | Network Automation
-> Designed a 3-agent pipeline (Monitor → Diagnostic → Reporting) following the orchestrator/manager pattern, deliberately mixing deterministic logic, a ReAct tool-calling loop, and a single-shot LLM call based on each sub-task's actual complexity; validated the full handoff chain with an offline test harness before wiring in the live API.
 
-## Talking points for the interview
-- "The most interesting decision wasn't which agent framework to use — it was deciding which parts of the pipeline needed to be agentic at all. Monitoring is deterministic, diagnosis benefits from a reasoning loop, and reporting is just a formatting task — matching architecture to actual task complexity is something I think about deliberately, not just applying an agent everywhere by default."
-- "I built a fully offline dry-run test harness that mocks the LLM responses, so I could validate the handoff logic between all three agents — what data each one receives and produces — before ever spending API calls or depending on a live device."
-- "If I extended this for production, I'd add a critic step after the diagnostic agent that checks whether the root cause is actually supported by the evidence gathered (a groundedness check), before it's allowed to reach the reporting agent."
